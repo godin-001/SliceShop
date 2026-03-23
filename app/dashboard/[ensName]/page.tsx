@@ -1,7 +1,8 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { mockStore, sampleOrders, sampleProducts, sampleAgentActions } from '@/lib/mock-data'
+import { useStore } from '@/hooks/useStore'
+import { sampleOrders, sampleAgentActions } from '@/lib/mock-data'
 import { chaosCasing } from '@/lib/utils'
 import MetricCards from '@/components/dashboard/MetricCards'
 import OrdersTable from '@/components/dashboard/OrdersTable'
@@ -11,7 +12,17 @@ import AgentActivityLog from '@/components/dashboard/AgentActivityLog'
 export default function DashboardPage() {
   const params = useParams()
   const ensName = params.ensName as string
-  const store = mockStore
+  const { store, loading } = useStore(ensName)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <p className="font-[family-name:var(--font-dm-mono)] text-white/30 text-sm uppercase tracking-[0.1em] animate-pulse">
+          Loading dashboard...
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -19,7 +30,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-10">
           <p className="font-[family-name:var(--font-dm-mono)] text-sm text-white/40 mb-2">
-            {decodeURIComponent(ensName)}.sliceshop.eth — Dashboard
+            {store.ensName || `${decodeURIComponent(ensName)}.sliceshop.eth`} — Dashboard
           </p>
           <h1 className="font-[family-name:var(--font-syne)] text-3xl md:text-4xl font-bold">
             {chaosCasing(store.name)}
@@ -30,7 +41,7 @@ export default function DashboardPage() {
         <MetricCards
           totalRevenue={store.totalRevenue}
           ordersCount={sampleOrders.length}
-          activeProducts={sampleProducts.filter((p) => p.active).length}
+          activeProducts={store.products.filter((p) => p.active).length}
           visitors={store.visitors}
         />
 
@@ -48,7 +59,7 @@ export default function DashboardPage() {
             <p className="font-[family-name:var(--font-dm-mono)] text-xs text-white/30 uppercase tracking-[0.1em] mb-4">
               [02] — Products
             </p>
-            <ProductsManager products={sampleProducts} />
+            <ProductsManager products={store.products} />
           </section>
 
           <section>
