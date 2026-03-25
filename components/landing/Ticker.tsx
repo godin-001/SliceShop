@@ -2,25 +2,25 @@
 
 import { motion } from 'framer-motion'
 
-const items = ['cUSD', 'ENS', 'Slice', 'Celo', 'USDC', 'Base', 'Orders', 'Payments']
-const duplicated = [...items, ...items]
+const items = ['cUSD', 'ENS', 'ERC-8128', 'Celo', 'x402', 'Stablecoins', 'Agents', 'Slice', 'USDC', 'wagmi', 'viem']
+const duplicated = [...items, ...items, ...items]
 
 export default function Ticker() {
   return (
     <div
       className="overflow-hidden whitespace-nowrap"
       style={{
-        borderTop: '0.5px solid rgba(255,255,255,0.08)',
-        borderBottom: '0.5px solid rgba(255,255,255,0.08)',
-        backgroundColor: '#0a0a0a',
+        borderTop: '1px solid rgba(0,0,0,0.07)',
+        borderBottom: '1px solid rgba(0,0,0,0.07)',
+        backgroundColor: '#ffffff',
       }}
     >
       <motion.div
-        className="inline-flex py-4"
-        animate={{ x: ['0%', '-50%'] }}
+        className="inline-flex py-3"
+        animate={{ x: ['0%', '-33.33%'] }}
         transition={{
           x: {
-            duration: 20,
+            duration: 24,
             repeat: Infinity,
             ease: 'linear',
           },
@@ -29,20 +29,22 @@ export default function Ticker() {
         {duplicated.map((item, i) => (
           <span
             key={i}
-            className="inline-flex items-center text-sm"
+            className="inline-flex items-center text-xs"
             style={{
-              fontFamily: 'DM Mono, monospace',
-              color: 'rgba(255,255,255,0.35)',
+              fontFamily: '"IBM Plex Mono", monospace',
+              color: '#71717a',
               paddingLeft: '2rem',
               paddingRight: '2rem',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
             }}
           >
             {item}
             <span
               className="ml-8"
-              style={{ color: 'rgba(255,255,255,0.15)' }}
+              style={{ color: '#f97316', opacity: 0.5 }}
             >
-              &middot;
+              ·
             </span>
           </span>
         ))}

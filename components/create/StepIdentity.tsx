@@ -10,6 +10,29 @@ const CATEGORIES = [
   { value: 'membership', label: 'Memberships' },
 ] as const
 
+const LABEL = {
+  fontFamily: '"IBM Plex Mono", monospace',
+  fontSize: '0.625rem',
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase' as const,
+  color: '#71717a',
+  display: 'block',
+  marginBottom: '0.5rem',
+}
+
+const INPUT = {
+  width: '100%',
+  padding: '0.75rem 1rem',
+  fontFamily: '"IBM Plex Mono", monospace',
+  fontSize: '0.875rem',
+  color: '#1a1a1a',
+  background: '#fafaf8',
+  border: '1px solid rgba(0,0,0,0.1)',
+  borderRadius: '8px',
+  outline: 'none',
+  cursor: 'crosshair' as const,
+}
+
 interface StepIdentityProps {
   storeName: string
   setStoreName: (name: string) => void
@@ -21,124 +44,71 @@ interface StepIdentityProps {
 }
 
 export default function StepIdentity({
-  storeName,
-  setStoreName,
-  description,
-  setDescription,
-  category,
-  setCategory,
-  onNext,
+  storeName, setStoreName, description, setDescription, category, setCategory, onNext,
 }: StepIdentityProps) {
   const { subdomain, isAvailable } = useENS(storeName)
 
   return (
-    <div className="p-8 flex flex-col gap-6">
-      {/* Wallet connection */}
-      <div className="flex items-center justify-between mb-2">
-        <span
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Wallet
-        </span>
+    <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* Wallet */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={LABEL}>Wallet</span>
         <ConnectKitButton />
       </div>
 
       {/* Store name */}
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Store Name
-        </label>
+      <div>
+        <label style={LABEL}>Store Name</label>
         <input
           type="text"
           value={storeName}
           onChange={(e) => setStoreName(e.target.value)}
           placeholder="my-store"
-          className="w-full px-4 py-3 text-sm text-white placeholder:text-white/20 outline-none"
-          style={{
-            backgroundColor: 'transparent',
-            border: '0.5px solid rgba(255,255,255,0.08)',
-            fontFamily: '"DM Mono", monospace',
-            cursor: 'crosshair',
-          }}
+          style={INPUT}
         />
         {storeName && (
-          <div
-            className="text-sm mt-1"
-            style={{
-              fontFamily: '"DM Mono", monospace',
-              color: isAvailable ? '#22c55e' : 'rgba(255,255,255,0.3)',
-            }}
-          >
+          <p style={{
+            fontFamily: '"IBM Plex Mono", monospace',
+            fontSize: '0.75rem',
+            color: isAvailable ? '#16a34a' : '#71717a',
+            marginTop: '0.375rem',
+          }}>
             {subdomain}
-          </div>
+          </p>
         )}
       </div>
 
       {/* Description */}
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Description
-        </label>
+      <div>
+        <label style={LABEL}>Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Describe your store..."
           rows={3}
-          className="w-full px-4 py-3 text-sm text-white placeholder:text-white/20 outline-none resize-none"
-          style={{
-            backgroundColor: 'transparent',
-            border: '0.5px solid rgba(255,255,255,0.08)',
-            fontFamily: '"DM Mono", monospace',
-            cursor: 'crosshair',
-          }}
+          style={{ ...INPUT, resize: 'none' }}
         />
       </div>
 
       {/* Category */}
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Category
-        </label>
-        <div className="flex flex-wrap gap-2">
+      <div>
+        <label style={LABEL}>Category</label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           {CATEGORIES.map((cat) => (
             <button
               key={cat.value}
               onClick={() => setCategory(cat.value)}
-              className="px-4 py-2 text-xs transition-colors"
               style={{
-                fontFamily: '"DM Mono", monospace',
+                fontFamily: '"IBM Plex Mono", monospace',
+                fontSize: '0.6875rem',
                 letterSpacing: '0.05em',
-                backgroundColor: category === cat.value ? '#22c55e' : 'transparent',
-                color: category === cat.value ? '#0a0a0a' : 'rgba(255,255,255,0.5)',
-                border: category === cat.value ? 'none' : '0.5px solid rgba(255,255,255,0.08)',
+                padding: '0.375rem 0.875rem',
                 borderRadius: '9999px',
+                backgroundColor: category === cat.value ? '#f97316' : 'transparent',
+                color: category === cat.value ? '#ffffff' : '#71717a',
+                border: category === cat.value ? 'none' : '1px solid rgba(0,0,0,0.12)',
                 cursor: 'crosshair',
+                transition: 'all 0.15s',
               }}
             >
               {cat.label}
@@ -147,20 +117,26 @@ export default function StepIdentity({
         </div>
       </div>
 
-      {/* Next button */}
+      {/* Next */}
       <button
         onClick={onNext}
         disabled={!storeName}
-        className="mt-4 w-full py-3 text-xs uppercase font-bold tracking-widest transition-opacity disabled:opacity-30"
         style={{
-          fontFamily: '"DM Mono", monospace',
-          letterSpacing: '0.1em',
-          backgroundColor: '#22c55e',
-          color: '#0a0a0a',
+          marginTop: '0.5rem',
+          width: '100%',
+          padding: '0.875rem',
+          fontFamily: '"Inter", sans-serif',
+          fontSize: '0.9375rem',
+          fontWeight: 600,
+          backgroundColor: storeName ? '#f97316' : '#f9731660',
+          color: '#ffffff',
+          border: 'none',
+          borderRadius: '8px',
           cursor: storeName ? 'crosshair' : 'not-allowed',
+          transition: 'background-color 0.2s',
         }}
       >
-        {'NEXT \u2192'}
+        Next →
       </button>
     </div>
   )

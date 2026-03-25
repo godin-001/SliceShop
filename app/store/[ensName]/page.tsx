@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { type Product } from '@/lib/mock-data'
 import { useStore } from '@/hooks/useStore'
-import { chaosCasing } from '@/lib/utils'
 import ProductGrid from '@/components/store/ProductGrid'
 import PurchaseModal from '@/components/store/PurchaseModal'
 import OrderConfirmation from '@/components/store/OrderConfirmation'
@@ -39,47 +38,79 @@ export default function StorePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
-        <p className="font-[family-name:var(--font-dm-mono)] text-white/30 text-sm uppercase tracking-[0.1em] animate-pulse">
-          Loading store...
+      <div style={{ minHeight: '100vh', paddingTop: '6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafaf8' }}>
+        <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: '#71717a', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          Loading store…
         </p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="max-w-5xl mx-auto px-6">
+    <div style={{ minHeight: '100vh', paddingTop: '6rem', paddingBottom: '4rem', background: '#fafaf8' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+
         {/* Store Header */}
-        <div className="mb-12">
-          <p className="font-[family-name:var(--font-dm-mono)] text-sm text-white/40 mb-2">
-            {store.ensName || `${decodeURIComponent(ensName)}.sliceshop.eth`}
-          </p>
-          <h1 className="font-[family-name:var(--font-syne)] text-4xl md:text-5xl font-bold mb-3">
-            {chaosCasing(store.name)}
-          </h1>
-          <p className="text-white/60 max-w-xl">{store.description}</p>
-          <div className="flex items-center gap-4 mt-4">
-            <span className="font-[family-name:var(--font-dm-mono)] text-xs text-white/30 uppercase tracking-[0.1em]">
+        <div style={{ marginBottom: '3rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div>
+              <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6875rem', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                {store.ensName || `${decodeURIComponent(ensName)}.sliceshop.eth`}
+              </p>
+              <h1 style={{
+                fontFamily: '"Playfair Display", serif',
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                fontWeight: 800,
+                color: '#1a1a1a',
+                lineHeight: 1.1,
+                marginBottom: '0.75rem',
+              }}>
+                {store.name}
+              </h1>
+              <p style={{ fontFamily: '"Inter", sans-serif', fontSize: '1rem', color: '#71717a', maxWidth: '520px', lineHeight: 1.6 }}>
+                {store.description}
+              </p>
+            </div>
+
+            {/* Verified badge */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid rgba(0,0,0,0.08)',
+              borderRadius: '12px',
+              padding: '1rem 1.25rem',
+              textAlign: 'right',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.375rem' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
+                <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.625rem', color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Verified</span>
+              </div>
+              <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6875rem', color: '#71717a' }}>
+                Powered by SliceShop
+              </p>
+            </div>
+          </div>
+
+          {/* Meta chips */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.625rem', color: '#71717a', background: 'rgba(0,0,0,0.05)', padding: '0.25rem 0.625rem', borderRadius: '9999px' }}>
               {store.category}
             </span>
-            <span className="text-white/10">|</span>
-            <span className="font-[family-name:var(--font-dm-mono)] text-xs text-[#a78bfa]">
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.625rem', color: '#6366f1', background: '#6366f115', padding: '0.25rem 0.625rem', borderRadius: '9999px' }}>
               {store.products.length} products
             </span>
-            <span className="text-white/10">|</span>
-            <span className="font-[family-name:var(--font-dm-mono)] text-xs text-[#22c55e]">
-              Powered by SliceShop
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.625rem', color: '#16a34a', background: '#16a34a15', padding: '0.25rem 0.625rem', borderRadius: '9999px' }}>
+              cUSD on Celo
+            </span>
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.625rem', color: '#f97316', background: '#f9731615', padding: '0.25rem 0.625rem', borderRadius: '9999px' }}>
+              x402 enabled
             </span>
           </div>
         </div>
 
-        {/* Products */}
-        <div className="mb-8">
-          <p className="font-[family-name:var(--font-dm-mono)] text-xs text-white/30 uppercase tracking-[0.1em] mb-6">
-            [01] — Products
-          </p>
-        </div>
+        {/* Products section */}
+        <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6875rem', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
+          Products
+        </p>
 
         <ProductGrid products={store.products} onBuy={handleBuy} />
 

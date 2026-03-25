@@ -5,6 +5,16 @@ import { formatAddress } from '@/lib/ens'
 
 const CURRENCIES = ['cUSD', 'USDC', 'CELO'] as const
 
+const LABEL = {
+  fontFamily: '"IBM Plex Mono", monospace',
+  fontSize: '0.625rem',
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase' as const,
+  color: '#71717a',
+  display: 'block',
+  marginBottom: '0.5rem',
+}
+
 interface StepPaymentsProps {
   paymentCurrency: string
   setPaymentCurrency: (currency: string) => void
@@ -16,175 +26,90 @@ interface StepPaymentsProps {
 }
 
 export default function StepPayments({
-  paymentCurrency,
-  setPaymentCurrency,
-  autoConfirm,
-  setAutoConfirm,
-  onBack,
-  onDeploy,
-  isDeploying,
+  paymentCurrency, setPaymentCurrency, autoConfirm, setAutoConfirm, onBack, onDeploy, isDeploying,
 }: StepPaymentsProps) {
   const { address } = useAccount()
 
+  const btnActive = (active: boolean) => ({
+    flex: 1, padding: '0.75rem 0.5rem',
+    fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6875rem',
+    fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' as const,
+    backgroundColor: active ? '#f97316' : 'transparent',
+    color: active ? '#ffffff' : '#71717a',
+    border: active ? 'none' : '1px solid rgba(0,0,0,0.12)',
+    borderRadius: '8px', cursor: 'crosshair', transition: 'all 0.15s',
+  })
+
   return (
-    <div className="p-8 flex flex-col gap-6">
+    <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Payment currency */}
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Payment Currency
-        </label>
-        <div className="flex gap-2">
-          {CURRENCIES.map((cur) => (
-            <button
-              key={cur}
-              onClick={() => setPaymentCurrency(cur)}
-              className="flex-1 py-3 text-xs uppercase font-bold tracking-widest transition-colors"
-              style={{
-                fontFamily: '"DM Mono", monospace',
-                letterSpacing: '0.1em',
-                backgroundColor: paymentCurrency === cur ? '#22c55e' : 'transparent',
-                color: paymentCurrency === cur ? '#0a0a0a' : 'rgba(255,255,255,0.5)',
-                border: paymentCurrency === cur ? 'none' : '0.5px solid rgba(255,255,255,0.08)',
-                cursor: 'crosshair',
-              }}
-            >
+      <div>
+        <label style={LABEL}>Payment Currency</label>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {CURRENCIES.map(cur => (
+            <button key={cur} onClick={() => setPaymentCurrency(cur)} style={btnActive(paymentCurrency === cur)}>
               {cur}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Wallet address */}
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Payout Wallet
-        </label>
-        <div
-          className="px-4 py-3 text-sm"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            color: address ? '#22c55e' : 'rgba(255,255,255,0.2)',
-            border: '0.5px solid rgba(255,255,255,0.08)',
-          }}
-        >
+      {/* Payout wallet */}
+      <div>
+        <label style={LABEL}>Payout Wallet</label>
+        <div style={{
+          padding: '0.75rem 1rem', background: '#fafaf8', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px',
+          fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.875rem',
+          color: address ? '#16a34a' : '#71717a',
+        }}>
           {address ? formatAddress(address, 8) : 'No wallet connected'}
         </div>
       </div>
 
-      {/* Order confirmation toggle */}
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-[10px] uppercase"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Order Confirmation
-        </label>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setAutoConfirm(true)}
-            className="flex-1 py-3 text-xs transition-colors"
-            style={{
-              fontFamily: '"DM Mono", monospace',
-              backgroundColor: autoConfirm ? '#a78bfa' : 'transparent',
-              color: autoConfirm ? '#0a0a0a' : 'rgba(255,255,255,0.5)',
-              border: autoConfirm ? 'none' : '0.5px solid rgba(255,255,255,0.08)',
-              cursor: 'crosshair',
-            }}
-          >
+      {/* Order confirmation */}
+      <div>
+        <label style={LABEL}>Order Confirmation</label>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button onClick={() => setAutoConfirm(true)} style={btnActive(autoConfirm)}>
             Automatic (agent)
           </button>
-          <button
-            onClick={() => setAutoConfirm(false)}
-            className="flex-1 py-3 text-xs transition-colors"
-            style={{
-              fontFamily: '"DM Mono", monospace',
-              backgroundColor: !autoConfirm ? '#a78bfa' : 'transparent',
-              color: !autoConfirm ? '#0a0a0a' : 'rgba(255,255,255,0.5)',
-              border: !autoConfirm ? 'none' : '0.5px solid rgba(255,255,255,0.08)',
-              cursor: 'crosshair',
-            }}
-          >
+          <button onClick={() => setAutoConfirm(false)} style={btnActive(!autoConfirm)}>
             Manual review
           </button>
         </div>
       </div>
 
-      {/* Store preview */}
-      <div
-        className="flex flex-col gap-2 p-4 mt-2"
-        style={{ border: '0.5px solid rgba(255,255,255,0.08)' }}
-      >
-        <span
-          className="text-[10px] uppercase mb-2"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            color: 'rgba(255,255,255,0.4)',
-          }}
-        >
-          Store Preview
-        </span>
-        <div className="flex justify-between text-xs" style={{ fontFamily: '"DM Mono", monospace' }}>
-          <span style={{ color: 'rgba(255,255,255,0.4)' }}>Currency</span>
-          <span style={{ color: '#fff' }}>{paymentCurrency}</span>
-        </div>
-        <div className="flex justify-between text-xs" style={{ fontFamily: '"DM Mono", monospace' }}>
-          <span style={{ color: 'rgba(255,255,255,0.4)' }}>Confirmation</span>
-          <span style={{ color: '#fff' }}>{autoConfirm ? 'Automatic' : 'Manual'}</span>
-        </div>
-        <div className="flex justify-between text-xs" style={{ fontFamily: '"DM Mono", monospace' }}>
-          <span style={{ color: 'rgba(255,255,255,0.4)' }}>Wallet</span>
-          <span style={{ color: '#fff' }}>{address ? formatAddress(address, 6) : '—'}</span>
-        </div>
+      {/* Preview card */}
+      <div style={{
+        background: '#fafaf8', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', padding: '1.25rem',
+        display: 'flex', flexDirection: 'column', gap: '0.625rem',
+      }}>
+        <p style={LABEL}>Store summary</p>
+        {[
+          { label: 'Currency', value: paymentCurrency },
+          { label: 'Confirmation', value: autoConfirm ? 'Automatic' : 'Manual' },
+          { label: 'Wallet', value: address ? formatAddress(address, 6) : '—' },
+        ].map(row => (
+          <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem', color: '#71717a' }}>{row.label}</span>
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem', color: '#1a1a1a', fontWeight: 500 }}>{row.value}</span>
+          </div>
+        ))}
       </div>
 
       {/* Navigation */}
-      <div className="flex gap-3 mt-4">
-        <button
-          onClick={onBack}
-          disabled={isDeploying}
-          className="flex-1 py-3 text-xs uppercase tracking-widest text-white/50 hover:text-white transition-colors disabled:opacity-30"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            border: '0.5px solid rgba(255,255,255,0.08)',
-            backgroundColor: 'transparent',
-            cursor: isDeploying ? 'not-allowed' : 'crosshair',
-          }}
-        >
-          {'\u2190 BACK'}
-        </button>
-        <button
-          onClick={onDeploy}
-          disabled={isDeploying}
-          className="flex-1 py-3 text-xs uppercase font-bold tracking-widest transition-opacity disabled:opacity-70"
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            letterSpacing: '0.1em',
-            backgroundColor: '#22c55e',
-            color: '#0a0a0a',
-            cursor: isDeploying ? 'wait' : 'crosshair',
-          }}
-        >
-          {isDeploying ? 'DEPLOYING...' : 'DEPLOY STORE'}
+      <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <button onClick={onBack} disabled={isDeploying} style={{
+          flex: 1, padding: '0.875rem', fontFamily: '"Inter", sans-serif', fontSize: '0.9375rem',
+          color: '#71717a', background: 'transparent', border: '1px solid rgba(0,0,0,0.12)', borderRadius: '8px',
+          cursor: isDeploying ? 'not-allowed' : 'crosshair', opacity: isDeploying ? 0.5 : 1,
+        }}>← Back</button>
+        <button onClick={onDeploy} disabled={isDeploying} style={{
+          flex: 1, padding: '0.875rem', fontFamily: '"Inter", sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+          color: '#ffffff', background: '#f97316', border: 'none', borderRadius: '8px',
+          cursor: isDeploying ? 'wait' : 'crosshair', opacity: isDeploying ? 0.7 : 1,
+        }}>
+          {isDeploying ? 'Deploying…' : 'Deploy Store ↗'}
         </button>
       </div>
     </div>

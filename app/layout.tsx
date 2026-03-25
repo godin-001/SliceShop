@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-[#0a0a0a] text-[#ededed]">
+      <body className="min-h-full flex flex-col" style={{ background: '#fafaf8', color: '#1a1a1a' }}>
         <Web3Provider>
           <NavBar />
           <main className="flex-1">{children}</main>

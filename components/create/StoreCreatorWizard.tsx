@@ -1,7 +1,6 @@
 'use client'
 
 import { useCreateStore } from '@/hooks/useStore'
-import { chaosCasing } from '@/lib/utils'
 import StepIdentity from './StepIdentity'
 import StepProducts from './StepProducts'
 import StepPayments from './StepPayments'
@@ -26,57 +25,64 @@ export default function StoreCreatorWizard() {
   }
 
   return (
-    <div
-      className="min-h-screen w-full flex flex-col items-center pt-32 pb-20 px-4"
-      style={{ backgroundColor: '#0a0a0a' }}
-    >
-      <h1
-        className="text-3xl font-bold mb-10"
-        style={{ fontFamily: '"Syne", sans-serif', color: '#fff' }}
-      >
-        {chaosCasing('Create Your Store')}
-      </h1>
+    <div style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
+      {/* Heading */}
+      <div style={{ marginBottom: '2.5rem' }}>
+        <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6875rem', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+          Store creator
+        </p>
+        <h1 style={{ fontFamily: '"Playfair Display", serif', fontSize: '2rem', fontWeight: 700, color: '#1a1a1a' }}>
+          Open your store
+        </h1>
+      </div>
 
       {/* Progress indicator */}
-      <div className="flex items-center gap-0 mb-14 w-full max-w-md">
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem' }}>
         {STEPS.map((label, i) => {
           const stepNum = i + 1
           const isActive = step === stepNum
           const isCompleted = step > stepNum
 
           return (
-            <div key={label} className="flex items-center flex-1 last:flex-initial">
-              <div className="flex flex-col items-center gap-2">
-                <div
-                  className="w-8 h-8 flex items-center justify-center text-xs font-bold"
-                  style={{
-                    fontFamily: '"DM Mono", monospace',
-                    backgroundColor: isActive || isCompleted ? '#22c55e' : 'transparent',
-                    border: isActive || isCompleted ? 'none' : '0.5px solid rgba(255,255,255,0.08)',
-                    color: isActive || isCompleted ? '#0a0a0a' : 'rgba(255,255,255,0.4)',
-                  }}
-                >
+            <div key={label} style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : undefined }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.375rem' }}>
+                <div style={{
+                  width: '2rem',
+                  height: '2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '50%',
+                  fontFamily: '"IBM Plex Mono", monospace',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  backgroundColor: isActive ? '#f97316' : isCompleted ? '#16a34a' : 'transparent',
+                  border: isActive || isCompleted ? 'none' : '1px solid rgba(0,0,0,0.15)',
+                  color: isActive || isCompleted ? '#ffffff' : '#71717a',
+                  transition: 'all 0.2s',
+                }}>
                   {isCompleted ? '✓' : stepNum}
                 </div>
-                <span
-                  className="text-[10px] uppercase"
-                  style={{
-                    fontFamily: '"DM Mono", monospace',
-                    letterSpacing: '0.1em',
-                    color: isActive ? '#22c55e' : 'rgba(255,255,255,0.4)',
-                  }}
-                >
+                <span style={{
+                  fontFamily: '"IBM Plex Mono", monospace',
+                  fontSize: '0.6rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: isActive ? '#f97316' : isCompleted ? '#16a34a' : '#71717a',
+                }}>
                   {label}
                 </span>
               </div>
 
               {i < STEPS.length - 1 && (
-                <div
-                  className="flex-1 h-px mx-3 mt-[-18px]"
-                  style={{
-                    backgroundColor: step > stepNum ? '#22c55e' : 'rgba(255,255,255,0.08)',
-                  }}
-                />
+                <div style={{
+                  flex: 1,
+                  height: '1px',
+                  margin: '0 0.75rem',
+                  marginBottom: '1.25rem',
+                  backgroundColor: step > stepNum ? '#16a34a' : 'rgba(0,0,0,0.1)',
+                  transition: 'background-color 0.2s',
+                }} />
               )}
             </div>
           )
@@ -84,10 +90,12 @@ export default function StoreCreatorWizard() {
       </div>
 
       {/* Step content */}
-      <div
-        className="w-full max-w-lg"
-        style={{ border: '0.5px solid rgba(255,255,255,0.08)' }}
-      >
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid rgba(0,0,0,0.08)',
+        borderRadius: '12px',
+        overflow: 'hidden',
+      }}>
         {step === 1 && (
           <StepIdentity
             storeName={storeName}
