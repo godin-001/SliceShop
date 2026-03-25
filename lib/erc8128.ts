@@ -10,15 +10,32 @@ export interface ERC8128Message {
   expirationTime: string
 }
 
-export function buildERC8128Message(address: string, nonce: string): ERC8128Message {
+/**
+ * Build an ERC-8128 sign-in message.
+ * The domain and URI are resolved dynamically from window.location.host
+ * so MetaMask doesn't flag a domain mismatch.
+ */
+export function buildERC8128Message(
+  address: string,
+  nonce: string,
+  domain?: string
+): ERC8128Message {
+  // Prefer the passed-in domain, then window.location.host (client), then fallback
+  const host =
+    domain ??
+    (typeof window !== 'undefined'
+      ? window.location.host
+      : 'sliceshop-phi.vercel.app')
+
+  const uri = `https://${host}`
   const now = new Date()
-  const expiration = new Date(now.getTime() + 30 * 60 * 1000) // 30 minutes
+  const expiration = new Date(now.getTime() + 86400000) // 24 hours
 
   return {
-    domain: 'sliceshop.eth',
+    domain: host,
     address,
-    statement: 'Sign in to SliceShop with ERC-8128 authentication.',
-    uri: 'https://sliceshop.eth',
+    statement: 'Sign in to SliceShop — your onchain commerce platform.',
+    uri,
     version: '1',
     chainId: 42220,
     nonce,

@@ -44,7 +44,10 @@ export function useERC8128() {
 
     try {
       const nonce = generateNonce()
-      const message = buildERC8128Message(address, nonce)
+      // Pass the current host so MetaMask sees a matching domain (no security alert)
+      const currentDomain =
+        typeof window !== 'undefined' ? window.location.host : undefined
+      const message = buildERC8128Message(address, nonce, currentDomain)
       setPendingMessage(message)
 
       const messageString = serializeForSigning(message)
