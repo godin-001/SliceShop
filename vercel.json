@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard/demo-store",
+      "permanent": false
+    }
+  ]
+}
