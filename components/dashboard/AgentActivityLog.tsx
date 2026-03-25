@@ -1,16 +1,24 @@
 'use client'
 
 import { AgentAction } from '@/lib/mock-data'
+import CeloscanLink from '@/components/ui/CeloscanLink'
 
 interface AgentActivityLogProps {
   actions: AgentAction[]
 }
 
 const dotColors: Record<AgentAction['type'], string> = {
-  order: '#22c55e',
-  ens: '#a78bfa',
+  order: '#16a34a',
+  ens: '#8b5cf6',
   alert: '#eab308',
-  system: '#6b7280',
+  system: '#71717a',
+  erc8128: '#f97316',
+  x402: '#16a34a',
+}
+
+const badgeStyles: Partial<Record<AgentAction['type'], { bg: string; color: string; label: string }>> = {
+  erc8128: { bg: '#fff7ed', color: '#f97316', label: 'ERC-8128' },
+  x402: { bg: '#f0fdf4', color: '#16a34a', label: 'x402' },
 }
 
 function relativeTime(timestamp: string): string {
@@ -32,8 +40,9 @@ export default function AgentActivityLog({ actions }: AgentActivityLogProps) {
   return (
     <div
       style={{
-        backgroundColor: '#111',
-        border: '0.5px solid rgba(255,255,255,0.08)',
+        backgroundColor: '#ffffff',
+        border: '1px solid rgba(0,0,0,0.08)',
+        borderRadius: '0.75rem',
         maxHeight: '28rem',
         overflowY: 'auto',
       }}
@@ -45,7 +54,7 @@ export default function AgentActivityLog({ actions }: AgentActivityLogProps) {
             display: 'flex',
             gap: '0.75rem',
             padding: '0.875rem 1.25rem',
-            borderBottom: index < actions.length - 1 ? '0.5px solid rgba(255,255,255,0.08)' : 'none',
+            borderBottom: index < actions.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
             alignItems: 'flex-start',
           }}
         >
@@ -61,23 +70,41 @@ export default function AgentActivityLog({ actions }: AgentActivityLogProps) {
             }}
           />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span
+                  style={{
+                    fontFamily: '"Inter", sans-serif',
+                    fontSize: '0.8125rem',
+                    fontWeight: 600,
+                    color: '#1a1a1a',
+                  }}
+                >
+                  {action.action}
+                </span>
+                {badgeStyles[action.type] && (
+                  <span
+                    style={{
+                      fontFamily: '"IBM Plex Mono", monospace',
+                      fontSize: '0.625rem',
+                      fontWeight: 600,
+                      color: badgeStyles[action.type]!.color,
+                      backgroundColor: badgeStyles[action.type]!.bg,
+                      padding: '0.125rem 0.5rem',
+                      borderRadius: '9999px',
+                      letterSpacing: '0.025em',
+                    }}
+                  >
+                    {badgeStyles[action.type]!.label}
+                  </span>
+                )}
+              </div>
               <span
                 style={{
-                  fontFamily: '"DM Mono", monospace',
-                  fontSize: '0.8125rem',
-                  fontWeight: 700,
-                  color: '#fff',
-                }}
-              >
-                {action.action}
-              </span>
-              <span
-                style={{
-                  fontFamily: '"DM Mono", monospace',
+                  fontFamily: '"IBM Plex Mono", monospace',
                   fontSize: '0.6875rem',
-                  color: 'rgba(255,255,255,0.3)',
+                  color: '#71717a',
                   flexShrink: 0,
                 }}
               >
@@ -86,14 +113,19 @@ export default function AgentActivityLog({ actions }: AgentActivityLogProps) {
             </div>
             <span
               style={{
-                fontFamily: '"DM Mono", monospace',
+                fontFamily: '"Inter", sans-serif',
                 fontSize: '0.75rem',
-                color: 'rgba(255,255,255,0.45)',
-                lineHeight: 1.4,
+                color: '#71717a',
+                lineHeight: 1.5,
               }}
             >
               {action.detail}
             </span>
+            {action.txHash && (
+              <div style={{ marginTop: '0.125rem' }}>
+                <CeloscanLink txHash={action.txHash} />
+              </div>
+            )}
           </div>
         </div>
       ))}

@@ -40,7 +40,8 @@ export interface AgentAction {
   action: string
   detail: string
   timestamp: string
-  type: 'order' | 'ens' | 'alert' | 'system'
+  type: 'order' | 'ens' | 'alert' | 'system' | 'erc8128' | 'x402'
+  txHash?: string
 }
 
 export const featuredStores: { ensName: string; category: string; productCount: number; totalSales: number }[] = [
@@ -162,13 +163,17 @@ export const sampleOrders: Order[] = [
 ]
 
 export const sampleAgentActions: AgentAction[] = [
-  { id: 'act-001', action: 'Order confirmed', detail: 'ORD-1001 — Genesis NFT Pack — 25 cUSD received', timestamp: '2026-03-22T14:30:12Z', type: 'order' },
-  { id: 'act-002', action: 'Digital delivery sent', detail: 'IPFS link delivered to vitalik.eth for ORD-1001', timestamp: '2026-03-22T14:30:15Z', type: 'order' },
-  { id: 'act-003', action: 'ENS subdomain updated', detail: 'pixeldrops.sliceshop.eth resolver set to 0x742d...', timestamp: '2026-03-22T12:00:00Z', type: 'ens' },
-  { id: 'act-004', action: 'Low stock alert', detail: 'Protocol Hoodie — 12 remaining (threshold: 15)', timestamp: '2026-03-21T16:00:00Z', type: 'alert' },
-  { id: 'act-005', action: 'Order fulfilled', detail: 'ORD-1002 — ZK Fundamentals Course — access granted to alice.eth', timestamp: '2026-03-21T09:15:30Z', type: 'order' },
-  { id: 'act-006', action: 'Payment processed', detail: '65 cUSD from 0xabcd... for Protocol Hoodie', timestamp: '2026-03-23T02:45:05Z', type: 'order' },
-  { id: 'act-007', action: 'System health check', detail: 'All store contracts operational. RPC latency: 120ms', timestamp: '2026-03-23T00:00:00Z', type: 'system' },
+  { id: 'act-001', action: 'ERC-8128 auth verified', detail: 'Merchant pixeldrops.sliceshop.eth signed in via ERC-8128', timestamp: '2026-03-25T10:00:00Z', type: 'erc8128' },
+  { id: 'act-002', action: 'x402 payment processed', detail: '25 cUSD received for Genesis NFT Pack via x402 protocol', timestamp: '2026-03-25T09:45:00Z', type: 'x402', txHash: '0x8a2f3e4d5c6b7a8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2' },
+  { id: 'act-003', action: 'Order confirmed', detail: 'ORD-1001 — Genesis NFT Pack — 25 cUSD received', timestamp: '2026-03-22T14:30:12Z', type: 'order', txHash: '0x8a2f3e4d5c6b7a8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2' },
+  { id: 'act-004', action: 'Digital delivery sent', detail: 'IPFS link delivered to vitalik.eth for ORD-1001', timestamp: '2026-03-22T14:30:15Z', type: 'order' },
+  { id: 'act-005', action: 'ENS subdomain updated', detail: 'pixeldrops.sliceshop.eth resolver set to 0x742d...', timestamp: '2026-03-22T12:00:00Z', type: 'ens' },
+  { id: 'act-006', action: 'Low stock alert', detail: 'Protocol Hoodie — 12 remaining (threshold: 15)', timestamp: '2026-03-21T16:00:00Z', type: 'alert' },
+  { id: 'act-007', action: 'x402 payment rejected', detail: 'Insufficient cUSD for Protocol Hoodie — expected 65, received 50', timestamp: '2026-03-21T14:00:00Z', type: 'x402' },
+  { id: 'act-008', action: 'Order fulfilled', detail: 'ORD-1002 — ZK Fundamentals Course — access granted to alice.eth', timestamp: '2026-03-21T09:15:30Z', type: 'order', txHash: '0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2' },
+  { id: 'act-009', action: 'ERC-8128 session expired', detail: 'Session for 0x742d...bD18 expired after 30 minutes', timestamp: '2026-03-21T08:00:00Z', type: 'erc8128' },
+  { id: 'act-010', action: 'Payment processed', detail: '65 cUSD from 0xabcd... for Protocol Hoodie', timestamp: '2026-03-23T02:45:05Z', type: 'order', txHash: '0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3' },
+  { id: 'act-011', action: 'System health check', detail: 'All store contracts operational. RPC latency: 120ms', timestamp: '2026-03-23T00:00:00Z', type: 'system' },
 ]
 
 export const mockStore: Store = {
